@@ -12,6 +12,8 @@ import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.Callback;
+import android.net.Uri;
+
 
 public class SendSMSModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
