@@ -35,9 +35,9 @@ public class SendSMSModule extends ReactContextBaseJavaModule implements Activit
     public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
         //System.out.println("in module onActivityResult() request " + requestCode + " result " + resultCode);
         //canceled intent
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
-            sendCallback(false, true, false);
-        }
+        //if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_CANCELED) {
+         //   sendCallback(false, true, false);
+        //}
     }
 
     @Override
@@ -78,7 +78,7 @@ public class SendSMSModule extends ReactContextBaseJavaModule implements Activit
             sendIntent.putExtra("sms_body", body);
             sendIntent.putExtra(sendIntent.EXTRA_TEXT, body);
             sendIntent.putExtra("exit_on_sent", true);
-
+            String recipientString = "";
             //if recipients specified
             if (recipients != null) {
                 //Samsung for some reason uses commas and not semicolons as a delimiter
@@ -86,7 +86,7 @@ public class SendSMSModule extends ReactContextBaseJavaModule implements Activit
                 if(android.os.Build.MANUFACTURER.equalsIgnoreCase("Samsung")){
                     separator = ",";
                 }
-                String recipientString = "";
+                
                 for (int i = 0; i < recipients.size(); i++) {
                     recipientString += recipients.getString(i);
                     recipientString += separator;
@@ -94,7 +94,10 @@ public class SendSMSModule extends ReactContextBaseJavaModule implements Activit
                 sendIntent.putExtra("address", recipientString);
             }
 
-            reactContext.startActivityForResult(sendIntent, REQUEST_CODE, sendIntent.getExtras());
+            Intent smsIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("smsto:"+ recipientString));
+            smsIntent.putExtra("sms_body", body);
+            //startActivity(smsIntent);
+            reactContext.startActivityForResult(smsIntent, REQUEST_CODE, sendIntent.getExtras());
         } catch (Exception e) {
             //error!
             sendCallback(false, false, true);
